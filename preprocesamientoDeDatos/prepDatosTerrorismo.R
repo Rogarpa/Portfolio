@@ -1,0 +1,1 @@
+data = read.csv(file = "RUTA/globalterrorismdb_0718dist.csv", sep=",", header = T, stringsAsFactors = F)
