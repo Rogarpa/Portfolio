@@ -136,4 +136,524 @@ manejo <- function(tabla){
   data <- manejo(data)
 
 
+manejo2 <- function(tabla){
+  #hacemos una tabla con el conteo de las categorias de 1 a 22
+  tabla_frecuencia <- table(tabla$targtype1)
+  print(tabla_frecuencia)
+
+  # Cargar librerías
+  library(ggplot2)
+
+  # Frecuencia de valores en targtype1
+  value_counts <- table(tabla$targtype1)
+
+  # boxplot targtype1 para ver si tiene valores atipicos
+  boxplot(tabla$targtype1, horizontal = TRUE, main = "Boxplot de targtype1")
+
+  # Visualización de Frecuencia de targtype1
+  barplot(value_counts, main = "Frecuencia de valores en targtype1", xlab = "targtype1", ylab = "Frecuencia")
+
+
+
+  # Calcular el rango intercuartílico (IQR) para ver si targtype tiene valore
+  Q1 <- quantile(tabla$targtype1, 0.25)
+  Q3 <- quantile(tabla$targtype1, 0.75)
+  IQR <- Q3 - Q1
+
+  # Definir límites para identificar valores atípicos
+  lower_limit <- Q1 - 1.5 * IQR
+  upper_limit <- Q3 + 1.5 * IQR
+
+  # Identificar valores atípicos
+  outliers <- tabla$targtype1 < lower_limit | tabla$targtype1 > upper_limit
+
+  # Mostrar valores atípicos
+  outlier_values <- tabla$targtype1[outliers]
+  cat("Valores atípicos en targtype1:", unique(outlier_values), "\n")
+
+  tabla_frecuencia <- table(tabla$targtype1_txt)
+  print(tabla_frecuencia)
+
+  # Obtiene los niveles únicos en el orden en que aparecen los datos
+  unique_levels <- unique(tabla$targtype1_txt)
+
+  # Convierte a factor con niveles manuales
+  tabla$targtype1_txt <- factor(tabla$targtype1_txt, levels = unique_levels)
+
+  # Verifica que la columna haya sido convertida a factor con los niveles deseados
+  str(tabla$targtype1_txt)
+
+  #impime
+  print(tabla$targtype1_txt)
+
+  #resultado <- factor((Private Citizens & Property,Government (Diplomatic),Journalists & Media,Police,Utilities,Military,Government (General),Airports & Aircraft,Business,Educational Institution,Violent Political Party ,Religious Figures/Institutions,Unknown,Transportation,Tourists,NGO,Telecommunication,Food or Water Supply,Terrorists/Non-State Militia,Other,Maritime, Abortion Related),levels=c("Private Citizens & Property","Government (Diplomatic)","Journalists & Media","Police","Utilities","Military","Government (General)","Airports & Aircraft","Business","Educational Institution","Violent Political Party ","Religious Figures/Institutions","Unknown","Transportation","Tourists","NGO","Telecommunication","Food or Water Supply","Terrorists/Non-State Militia","Other","Maritime", "Abortion Related"))
+
+
+
+  # Cargar bibliotecas
+  library(dplyr)
+  library(ggplot2)
+
+  # Verificar la distribución de categorías
+  tabla_frecuencia <- tabla %>%
+    group_by(targtype1_txt) %>%
+    summarise(frecuencia = n())
+
+  # Imprimir la tabla de frecuencias
+  print(tabla_frecuencia)
+
+  # Visualizar la distribución con un gráfico de barras
+  ggplot(tabla, aes(x = targtype1_txt)) +
+    geom_bar() +
+    labs(title = "Distribución de la Variable Categórica",
+        x = "Categoría",
+        y = "Frecuencia")
+
+  # Identificar categorías poco frecuentes
+  umbral_frecuencia <- 5  # Puedes ajustar este umbral según tus necesidades
+  categorias_poco_frecuentes <- tabla_frecuencia %>%
+    filter(frecuencia < umbral_frecuencia) %>%
+    pull(targtype1_txt)
+
+  # Imprimir categorías poco frecuentes
+  if (length(categorias_poco_frecuentes) > 0) {
+    cat("Categorías poco frecuentes:", paste(categorias_poco_frecuentes, collapse = ", "), "\n")
+  } else {
+    cat("No hay categorías poco frecuentes.\n")
+  }
+  #conteo de targsubtype1
+  tabla_frecuencia <- table(tabla$targsubtype1)
+  print(tabla_frecuencia)
+  #valores perdidos
+
+  # Contar valores perdidos
+  valores_perdidos <- sum(is.na(tabla$targsubtype1))
+
+  # Imprimir la cantidad de valores perdidos
+  cat("Número de valores perdidos:", valores_perdidos, "\n")
+
+
+  # Calcular la media de la variable
+  media_targsubtype1 <- ceiling(mean(tabla$targsubtype1, na.rm = TRUE))
+
+  # Imputar la media redondeada hacia arriba
+  tabla$targsubtype1 <- ifelse(is.na(tabla$targsubtype1), media_targsubtype1, tabla$targsubtype1)
+
+
+  # Frecuencia de valores en targtype1
+  value_counts <- table(tabla$targsubtype1)
+
+  # boxplot targtype1 para ver si tiene valores atipicos
+  boxplot(tabla$targsubtype1, horizontal = TRUE, main = "Boxplot de targtype1")
+
+  # Visualización de Frecuencia de targtype1
+  barplot(value_counts, main = "Frecuencia de valores en targtype1", xlab = "targtype1", ylab = "Frecuencia")
+
+  # Rellenar los valores vacíos
+  tabla$targsubtype1_txt <- replace(tabla$targsubtype1_txt, tabla$targsubtype1_txt == "", "International Organization (peacekeeper, aid agency, compound)")
+
+
+  tabla_frecuencia <- table(tabla$targsubtype1_txt)
+  print(tabla_frecuencia)
+
+  #tabla de frecuencias para corp1
+  tabla_frecuencia <- table(tabla$corp1)
+  print(tabla_frecuencia)
+
+
+
+  # Calcular la frecuencia de cada categoría
+  frecuencia_categorias <- tabla %>%
+    group_by(corp1) %>%
+    summarise(frecuencia = n())
+
+  # Definir un umbral de frecuencia para categorías poco frecuentes
+  umbral_frecuencia <- 10  # Puedes ajustar este umbral según tus necesidades
+
+  # Identificar las categorías poco frecuentes
+  categorias_poco_frecuentes <- frecuencia_categorias %>%
+    filter(frecuencia < umbral_frecuencia) %>%
+    pull(corp1)
+
+  # Agrupar las categorías poco frecuentes bajo una etiqueta común
+  tabla <- tabla %>%
+    mutate(variable_texto_agrupada = ifelse(corp1 %in% categorias_poco_frecuentes, "Otras", corp1))
+
+
+
+
+  # Verificar la distribución de categorías
+  tabla_frecuencia <- tabla %>%
+    group_by(corp1) %>%
+    summarise(frecuencia = n())
+
+  # Imprimir la tabla de frecuencias
+  print(tabla_frecuencia)
+
+  # Visualizar la distribución con un gráfico de barras
+  #ggplot(tabla, aes(x = corp1)) +
+  # geom_bar() +
+    #labs(title = "Distribución de la Variable Categórica",
+    #    x = "Categoría",
+      #   y = "Frecuencia")
+
+  # Identificar categorías poco frecuentes
+  #umbral_frecuencia <- 5  # Puedes ajustar este umbral según tus necesidades
+  #categorias_poco_frecuentes <- tabla_frecuencia %>%
+  # filter(frecuencia < umbral_frecuencia) %>%
+    #pull(corp1)
+
+  # Imprimir categorías poco frecuentes
+  #if (length(categorias_poco_frecuentes) > 0) {
+  # cat("Categorías poco frecuentes:", paste(categorias_poco_frecuentes, collapse = ", "), "\n")
+  #} else {
+  # cat("No hay categorías poco frecuentes.\n")
+  #}
+
+
+  #tabla de frecuencias para corp1
+  tabla_frecuencia <- table(tabla$target1)
+  print(tabla_frecuencia)
+
+
+  # Contar los valores perdidos (cadenas vacías)
+  valores_perdidos_contados <- sum(is.na(tabla$target1) | tabla$target1 == "")
+
+  # Imprimir el resultado
+  cat("Número de valores perdidos (cadenas vacías):", valores_perdidos_contados, "\n")
+
+
+  # Calcular la frecuencia de cada categoría
+  frecuencia_categorias <- tabla %>%
+    group_by(target1) %>%
+    summarise(frecuencia = n())
+
+  # Definir un umbral de frecuencia para categorías poco frecuentes
+  umbral_frecuencia <- 10  # Puedes ajustar este umbral según tus necesidades
+
+  # Identificar las categorías poco frecuentes
+  categorias_poco_frecuentes <- frecuencia_categorias %>%
+    filter(frecuencia < umbral_frecuencia) %>%
+    pull(target1)
+
+  # Agrupar las categorías poco frecuentes bajo una etiqueta común
+  tabla <- tabla %>%
+    mutate(variable_texto_agrupada = ifelse(target1 %in% categorias_poco_frecuentes, "Otras", target1))
+
+  #hacemos una tabla con el conteo de las categorias de natlty1
+  tabla_frecuencia <- table(tabla$natlty1)
+  print(tabla_frecuencia)
+
+  table(tabla$natlty1, useNA = "ifany")
+
+  # Calcular la media de la variable cuantitativa
+  media_natlty1 <- mean(tabla$natlty1, na.rm = TRUE)
+
+  # Imputar los valores perdidos con el techo de la media
+  tabla$natlty1 <- ifelse(is.na(tabla$natlty1), ceiling(media_natlty1), tabla$natlty1)
+
+
+
+
+
+
+
+
+  # Calcular el rango intercuartílico (IQR) para ver si targtype tiene valore
+  Q1 <- quantile(tabla$natlty1, 0.25)
+  Q3 <- quantile(tabla$natlty1, 0.75)
+  IQR <- Q3 - Q1
+
+  # Definir límites para identificar valores atípicos
+  lower_limit <- Q1 - 1.5 * IQR
+  upper_limit <- Q3 + 1.5 * IQR
+
+  # Identificar valores atípicos
+  outliers <- tabla$natlty1 < lower_limit | tabla$natlty1 > upper_limit
+
+  # Mostrar valores atípicos
+  outlier_values <- tabla$natlty1[outliers]
+  cat("Valores atípicos en natlty1:", unique(outlier_values), "\n")
+
+  # Valores atípicos que deseas eliminar
+  valores_atipicos <- c(422, 359, 999, 403, 362, 603, 604, 377, 605, 349, 520, 351, 334, 1001, 347, 1003, 1002, 1004)
+
+  # Filtrar el dataframe para excluir filas con valores atípicos
+  tabla <- tabla[!tabla$natlty1 %in% valores_atipicos, ]
+
+
+
+
+
+
+
+
+  # Obtiene los niveles únicos en el orden en que aparecen los datos
+  unique_levels <- unique(tabla$natlty1_txt)
+
+  # Convierte a factor con niveles manuales
+  tabla$natlty1_txt <- factor(tabla$natlty1_txt, levels = unique_levels)
+
+  # Verifica que la columna haya sido convertida a factor con los niveles deseados
+  str(tabla$natlty1_txt)
+
+  # imprime 
+  print(tabla$natlty1_txt)
+
+
+  # Contar los valores perdidos (cadenas vacías)
+  valores_perdidos_contados <- sum(is.na(tabla$natlty1_txt) | tabla$natlty1_txt == "")
+
+  # Imprimir el resultado
+  cat("Número de valores perdidos (cadenas vacías):", valores_perdidos_contados, "\n")
+
+
+
+
+
+
+
+  #eliminamos targtype2 pues es imposible imputar datos
+
+  tabla$targtype2 <- NULL
+
+
+
+  #eliminamos targtype2_txt pues es imposible imputar datos
+
+  tabla$targtype2_txt <- NULL
+
+
+
+  #eliminamos targsubtype2 pues es imposible imputar datos
+
+  tabla$targsubtype2 <- NULL
+
+  #eliminamos targsubtype2_txt pues es imposible imputar datos
+
+  tabla$targsubtype2_txt <- NULL
+
+
+  #eliminamos corp2 pues es imposible imputar datos
+
+  tabla$corp2 <- NULL
+
+  #eliminamos target2 pues es imposible imputar datos
+
+  tabla$target2 <- NULL
+
+  #eliminamos natlty2 pues es imposible imputar datos
+
+  tabla$natlty2 <- NULL
+
+  #eliminamos natlty2_txt pues es imposible imputar datos
+
+  tabla$natlty2_txt <- NULL
+
+
+  #eliminamos targtype3 pues es imposible imputar datos
+
+  tabla$targtype3 <- NULL
+
+
+
+  #eliminamos targtype3_txt pues es imposible imputar datos
+
+  tabla$targtype3_txt <- NULL
+
+
+
+  #eliminamos targsubtype3 pues es imposible imputar datos
+
+  tabla$targsubtype3 <- NULL
+
+  #eliminamos targsubtype3_txt pues es imposible imputar datos
+
+  tabla$targsubtype3_txt <- NULL
+
+  #eliminamos corp3 pues es imposible imputar datos
+
+  tabla$corp3 <- NULL
+
+  #eliminamos target3 pues es imposible imputar datos
+
+  tabla$target3 <- NULL
+
+  #eliminamos natlty3 pues es imposible imputar datos
+
+  tabla$natlty3 <- NULL
+
+  #eliminamos natlty2_txt pues es imposible imputar datos
+
+  tabla$natlty3_txt <- NULL
+
+  # Contar los valores perdidos (cadenas vacías)
+  valores_perdidos_contados <- sum(is.na(tabla$gname) | tabla$gname == "")
+
+  # Imprimir el resultado
+  cat("Número de valores perdidos (cadenas vacías):", valores_perdidos_contados, "\n")
+
+  # Obtiene los niveles únicos en el orden en que aparecen los datos
+  unique_levels <- unique(tabla$gname)
+
+  # Convierte a factor con niveles manuales
+  tabla$gname <- factor(tabla$gname, levels = unique_levels)
+
+  # Verifica que la columna haya sido convertida a factor con los niveles deseados
+  str(tabla$gname)
+
+
+  #eliminamos gsubname pues es imposible imputar datos
+
+  tabla$gsubname <- NULL
+
+  #eliminamos gname2 pues es imposible imputar datos
+
+  tabla$gname2 <- NULL
+
+  #eliminamos gsubname2 pues es imposible imputar datos
+
+  tabla$gsubname2 <- NULL
+
+  #eliminamos gname3 pues es imposible imputar datos
+
+  tabla$gname3 <- NULL
+
+  #eliminamos gsubname3 pues es imposible imputar datos
+
+  tabla$gsubname3 <- NULL
+
+  #podemos guardar los motivos de algunos grupos antes de borrar la columna con 
+  # write.csv(tabla$motive, file = "ruta/del/archivo.csv", row.names = FALSE)
+
+  #eliminamos motive pues es imposible imputar datos
+
+  tabla$motive <- NULL
+
+  # checamos si guncertain1 tiene valores perdidos
+  valores_perdidos <- sum(is.na(tabla$guncertain1))
+
+  cat("Número de valores perdidos en guncertain1:", valores_perdidos, "\n")
+
+
+
+  # imputacion de guncertain con el techo de la media
+  media_guncertain1 <- mean(tabla$guncertain1, na.rm = TRUE)
+  techo_media <- ceiling(media_guncertain1)
+
+  # Imputar valores faltantes con el techo de la media
+  tabla$guncertain1 <- ifelse(is.na(tabla$guncertain1), techo_media, tabla$guncertain1)
+
+
+  #eliminamos guncertain2 pues es imposible imputar datos
+
+  tabla$guncertain2 <- NULL
+
+
+  #eliminamos guncertain3 pues es imposible imputar datos
+
+  tabla$guncertain3 <- NULL
+  summary(tabla)
+
+
+
+
+  # Obtiene los niveles únicos en el orden en que aparecen los datos
+  unique_levels <- unique(tabla$corp1)
+
+  # Convierte a factor con niveles manuales
+  tabla$corp1 <- factor(tabla$corp1 , levels = unique_levels)
+
+  # Verifica que la columna haya sido convertida a factor con los niveles deseados
+  str(tabla$corp1)
+
+  # Suponiendo que tu dataframe se llama "tabla"
+  tabla <- tabla %>%
+    mutate(corp1 = ifelse(corp1 == 1, 924, corp1))
+
+  # Suponiendo que tu dataframe se llama "tabla"
+  tabla$corp1 <- ifelse(is.na(tabla$corp1), 936, tabla$corp1)
+
+
+  # Obtiene los niveles únicos en el orden en que aparecen los datos
+  unique_levels <- unique(tabla$corp1)
+
+  # Convierte a factor con niveles manuales
+  tabla$corp1 <- factor(tabla$corp1 , levels = unique_levels)
+
+  # Verifica que la columna haya sido convertida a factor con los niveles deseados
+  str(tabla$corp1)
+
+
+
+  # Obtiene los niveles únicos en el orden en que aparecen los datos
+  unique_levels <- unique(tabla$targsubtype1_txt)
+
+  # Convierte a factor con niveles manuales
+  tabla$targsubtype1_txt <- factor(tabla$targsubtype1_txt , levels = unique_levels)
+
+  # Verifica que la columna haya sido convertida a factor con los niveles deseados
+  str(tabla$targsubtype1_txt)
+
+
+  # cambiamos las cadenas vacias a la categoria Unnamed Civilian/Unspecified
+  tabla <- tabla %>%
+    mutate(targsubtype1_txt = ifelse(targsubtype1_txt == 13, 45, targsubtype1_txt))
+  #regresamos a facotor targetsubtype1_txt
+  # Obtiene los niveles únicos en el orden en que aparecen los datos
+  unique_levels <- unique(tabla$targsubtype1_txt)
+
+  # Convierte a factor con niveles manuales
+  tabla$targsubtype1_txt <- factor(tabla$targsubtype1_txt , levels = unique_levels)
+
+  # Verifica que la columna haya sido convertida a factor con los niveles deseados
+  str(tabla$targsubtype1_txt)
+
+
+
+
+
+
+  # Obtiene los niveles únicos en el orden en que aparecen los datos
+  unique_levels <- unique(tabla$target1)
+
+  # Convierte a factor con niveles manuales
+  tabla$target1 <- factor(tabla$target1 , levels = unique_levels)
+
+  # Verifica que la columna haya sido convertida a factor con los niveles deseados
+  str(tabla$target1)
+
+
+
+  # Suponiendo que tu dataframe se llama "tabla"
+  tabla <- tabla %>%
+    mutate(target1 = ifelse(is.na(target1), "Civilians", target1))
+
+
+  # Obtiene los niveles únicos en el orden en que aparecen los datos
+  unique_levels <- unique(tabla$target1)
+
+  # Convierte a factor con niveles manuales
+  tabla$target1 <- factor(tabla$target1 , levels = unique_levels)
+
+  # Verifica que la columna haya sido convertida a factor con los niveles deseados
+  str(tabla$target1)
+
+  return (tabla)
+}
+
+  data <- manejo2(data)
+
+
+
+
   
+  
+  
+  
+  
+  
+  
+  
+  summary(data[35:68])
+
