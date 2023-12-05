@@ -1,4 +1,6 @@
 library(ggplot2)
+library(dplyr)
+library(caret)
 data = read.csv(file = "E:/Descargas/Repos/AMD-2024-1/globalterrorismdb_0718dist.csv", sep=",", header = T, stringsAsFactors = F)
 
 
@@ -132,8 +134,8 @@ manejo <- function(tabla){
 }
   
 
-  ### Manipulación de tabla
-  data <- manejo(data)
+### Manipulación de tabla
+data <- manejo(data)
 
 
 manejo2 <- function(tabla){
@@ -141,8 +143,6 @@ manejo2 <- function(tabla){
   tabla_frecuencia <- table(tabla$targtype1)
   print(tabla_frecuencia)
 
-  # Cargar librerías
-  library(ggplot2)
 
   # Frecuencia de valores en targtype1
   value_counts <- table(tabla$targtype1)
@@ -190,9 +190,6 @@ manejo2 <- function(tabla){
 
 
 
-  # Cargar bibliotecas
-  library(dplyr)
-  library(ggplot2)
 
   # Verificar la distribución de categorías
   tabla_frecuencia <- tabla %>%
@@ -639,21 +636,94 @@ manejo2 <- function(tabla){
   # Verifica que la columna haya sido convertida a factor con los niveles deseados
   str(tabla$target1)
 
+  #Convierte a factor corrección
+  data2$targsubtype1_txt <- as.factor(data2$targsubtype1_txt)
+  data2$corp1 <- as.factor(data2$corp1)
+  data2$target1 <- as.factor(data2$target1)
+
   return (tabla)
 }
 
-  data <- manejo2(data)
+data <- manejo2(data)
 
 
 
 
+
+
+manejo3 <- function(table){
+  # Seleccionar atributos relevantes
+  selected_data <- table %>% select(individual, nkill, nwound, weaptype1_txt, attacktype1_txt, targtype1_txt, gname, country_txt)
+
+  # Definir limites de los valores
+  calculate_bounds <- function(x) {
+    Q1 <- quantile(x, 0.25, na.rm = TRUE)
+    Q3 <- quantile(x, 0.75, na.rm = TRUE)
+    IQR <- Q3 - Q1
+    lower_bound <- Q1 - 1.5 * IQR
+    upper_bound <- Q3 + 1.5 * IQR
+    return(c(lower = lower_bound, upper = upper_bound))
+  }
+
+  # Definir funcion para eliminar o limitar valores atipicos
+  limit_outliers <- function(x) {
+    bounds <- calculate_bounds(x)
+    x[x < bounds["lower"]] <- bounds["lower"]
+    x[x > bounds["upper"]] <- bounds["upper"]
+    return(x)
+  }
+
+  # Aplicar funcion de limites de valores atipicos
+  selected_data$nkill <- limit_outliers(selected_data$nkill)
+  selected_data$nwound <- limit_outliers(selected_data$nwound)
+  selected_data$individual <- limit_outliers(selected_data$individual)
+
+  # Imputacion de valores perdidos para variables numericas
+  selected_data <- selected_data %>% mutate(
+    nkill = ifelse(is.na(nkill), median(nkill, na.rm = TRUE), nkill),
+    nwound = ifelse(is.na(nwound), median(nwound, na.rm = TRUE), nwound)
+  )
+
+  # Imputacion para variables categoricas
+  impute_mode <- function(x) {
+    ux <- unique(x)
+    ux[which.max(tabulate(match(x, ux)))]
+  }
+
+  selected_data <- selected_data %>% mutate(
+    weaptype1_txt = ifelse(is.na(weaptype1_txt), impute_mode(weaptype1_txt), weaptype1_txt),
+    attacktype1_txt = ifelse(is.na(attacktype1_txt), impute_mode(attacktype1_txt), attacktype1_txt),
+    targtype1_txt = ifelse(is.na(targtype1_txt), impute_mode(targtype1_txt), targtype1_txt),
+    gname = ifelse(is.na(gname), impute_mode(gname), gname),
+    country_txt = ifelse(is.na(country_txt), impute_mode(country_txt), country_txt)
+  )
+
+  # Normalizacion de variables numericas (nkill, nwound)
+  numeric_data <- selected_data %>% select(nkill, nwound)
+  preproc <- preProcess(numeric_data, method = c("center", "scale"))
+  normalized_data <- predict(preproc, numeric_data)
+
+  # Combinar datos normalizados con datos no numericos
+  selected_data <- bind_cols(selected_data %>% select(-nkill, -nwound), normalized_data)
+
+  # Discretizacion de nkill (aplicada despues de la normalizacion)
+  selected_data$nkill_discretizado <- cut(selected_data$nkill, breaks=c(-Inf, 0, 10, 50, Inf), labels=c("Muy bajo", "Bajo", "Medio", "Alto"))
+
+  # Cambio de Character a factor
+  selected_data[sapply(selected_data, is.character)] <- lapply(selected_data[sapply(selected_data, is.character)], factor)
+
+  # Guardar los datos procesados
+  # table$nkill <- selected_data$nkill
+  # table$nwound <- selected_data$nwound
+  # table$individual <- selected_data$individual
+  # table$weaptype1_txt <- selected_data$weaptype1_txt 
+  # table$attacktype1_txt <- selected_data$attacktype1_txt
+  # table$targtype1_txt <- selected_data$ targtype1_txt
+  # table$gname <- selected_data$gname
+  # table$country_txt <- selected_data$country_txt
   
-  
-  
-  
-  
-  
-  
-  
-  summary(data[35:68])
+  return (table)
+}
+
+data <- manejo3(data)
 
