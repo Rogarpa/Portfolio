@@ -550,7 +550,7 @@ manejo2 <- function(tabla){
   #eliminamos guncertain3 pues es imposible imputar datos
 
   tabla$guncertain3 <- NULL
-  summary(tabla)
+  
 
 
 
@@ -637,9 +637,9 @@ manejo2 <- function(tabla){
   str(tabla$target1)
 
   #Convierte a factor corrección
-  data2$targsubtype1_txt <- as.factor(data2$targsubtype1_txt)
-  data2$corp1 <- as.factor(data2$corp1)
-  data2$target1 <- as.factor(data2$target1)
+  tabla$targsubtype1_txt <- as.factor(tabla$targsubtype1_txt)
+  tabla$corp1 <- as.factor(tabla$corp1)
+  tabla$target1 <- as.factor(tabla$target1)
 
   return (tabla)
 }
@@ -713,17 +713,171 @@ manejo3 <- function(table){
   selected_data[sapply(selected_data, is.character)] <- lapply(selected_data[sapply(selected_data, is.character)], factor)
 
   # Guardar los datos procesados
-  # table$nkill <- selected_data$nkill
-  # table$nwound <- selected_data$nwound
-  # table$individual <- selected_data$individual
-  # table$weaptype1_txt <- selected_data$weaptype1_txt 
-  # table$attacktype1_txt <- selected_data$attacktype1_txt
-  # table$targtype1_txt <- selected_data$ targtype1_txt
-  # table$gname <- selected_data$gname
-  # table$country_txt <- selected_data$country_txt
+  table$nkill <- selected_data$nkill
+  table$nwound <- selected_data$nwound
+  table$individual <- selected_data$individual
+  table$weaptype1_txt <- selected_data$weaptype1_txt 
+  table$attacktype1_txt <- selected_data$attacktype1_txt
+  table$targtype1_txt <- selected_data$ targtype1_txt
+  table$gname <- selected_data$gname
+  table$country_txt <- selected_data$country_txt
   
+  return (selected_data)
+}
+
+data_aux <- manejo3(data)
+summary(data_aux)
+
+
+
+manejo4 <- function(table){
+  atipicosIQR <- function(data_column){
+    data_column
+    iqr <- IQR(data_column, na.rm = TRUE)
+    
+    limite_superior <- quantile(data_column, 0.75, na.rm = TRUE) + 1.5 * iqr
+    limite_inferior <- quantile(data_column, 0.25, na.rm = TRUE) - 1.5 * iqr
+    
+    valores_atipicos <- data_column[data_column > limite_superior | data_column < limite_inferior]
+    #valores_atipicos <- unique(valores_atipicos)
+    valores_atipicos <- valores_atipicos[!is.na(valores_atipicos)]
+    return (valores_atipicos)
+    
+  }
+
+  #Eliminación de columnas y valores atípicos ====================================================================================================================
+  #column nwoundus
+  table <- subset(table, select = -c(nwoundus))
+  #column nwoundte
+  table <- subset(table, select = -c(nwoundte))
+  #column propextent
+  table <- subset(table, select = -c(propextent))
+  #column propextent_txt
+  table <- subset(table, select = -c(propextent_txt))
+  #column propvalue
+  table <- table %>%
+            mutate(propvalue = ifelse((property == 0), 0, propvalue))%>%
+            mutate(propvalue = ifelse((property == -9), NA, propvalue))%>%
+            mutate(propvalue = ifelse((propvalue == -99), NA, propvalue))
+  table <- table[!(table$propvalue %in% atipicosIQR(table$propvalue)),]
+  #column property
+  table <- subset(table, select = -c(property))
+  #column propcomment
+  table <- subset(table, select = -c(propcomment))
+  #column nhostkid
+  table <- table %>%
+            mutate(nhostkid = ifelse((ishostkid == 0), 0, nhostkid))%>%
+            mutate(nhostkid = ifelse((ishostkid == -9), NA, nhostkid))%>%
+            mutate(nhostkid = ifelse((nhostkid == -99), NA, nhostkid))
+  data_aux2 <- table[!(table$nhostkid %in% atipicosIQR(table$nhostkid)),]
+  #column ishostkid
+  table <- subset(table, select = -c(ishostkid))
+  #column nhostkidus
+  table <- subset(table, select = -c(nhostkidus))
+  #column nhours
+  table <- table %>% 
+                  mutate(ndays = ifelse((ndays == -99), NA, ndays))%>%
+                  mutate(ndays = ifelse((ndays == -9), NA, ndays))
+  table <- table %>% 
+                  mutate(nhours = ifelse((nhours == -99), NA, nhours))%>%
+                  mutate(nhours = ifelse((nhours == -9), NA, nhours))%>%
+                  mutate(nhours = ifelse((is.na(nhours)),  (24*ndays), ifelse(is.na(ndays), nhours, (nhours+(24*ndays)))))
+  table <- table[!(table$nhours %in% atipicosIQR(table$nhours)),]
+  #column ndays
+  table <- subset(table, select = -c(ndays))
+  #column divert
+  table$divert <- as.factor(table$divert)
+  #column kidhijcountry
+  table$kidhijcountry <- as.factor(table$kidhijcountry)
+  #column ransomamt
+  table <- table %>%
+              mutate(ransomamt = ifelse((ransom == 0), 0, ransomamt))%>%
+              mutate(ransomamt = ifelse((ransom == -9), NA, ransomamt))%>%
+              mutate(ransomamt = ifelse((ransomamt == -99), NA, ransomamt))
+  #column ransomamtus
+  table <- subset(table, select = -c(ransomamtus))
+  #column ransompaid
+  table <- table %>%
+    mutate(ransompaid = ifelse((ransom == 0), 0, ransompaid))%>%
+    mutate(ransompaid = ifelse((ransom == -9), NA, ransompaid))%>%
+    mutate(ransompaid = ifelse((ransom == -99), NA, ransompaid))
+
+  table <- table[!(table$ransompaid %in% atipicosIQR(table$ransompaid)),]
+  #column ransompaidus
+  table <- subset(table, select = -c(ransompaidus))
+  #column ransomnote
+  table <- subset(table, select = -c(ransomnote))
+  #column ransom
+  table <- subset(table, select = -c(ransom))
+  #column hostkidoutcome
+  table <- subset(table, select = -c(hostkidoutcome))
+  #column hostkidoutcome_txt
+  table$hostkidoutcome_txt <- as.factor(table$hostkidoutcome_txt)
+  #column nreleased
+  table <- table[!(table$nreleased %in% atipicosIQR(table$nreleased)),]
+  #column addnotes
+  table <- subset(table, select = -c(addnotes))
+  #column scite1
+  table <- subset(table, select = -c(scite1))
+  #column scite2
+  table <- subset(table, select = -c(scite2))
+  #column scite3
+  table <- subset(table, select = -c(scite3))
+  #column dbsource
+  table <- subset(table, select = -c(dbsource))
+  #column INT_LOG
+  table <- table[!(table$INT_LOG %in% atipicosIQR(table$INT_LOG)),]
+  #column INT_IDEO
+  table <- table[!(table$INT_IDEO %in% atipicosIQR(table$INT_IDEO)),]
+  #column INT_MISC
+  table <- table[!(table$INT_MISC %in% atipicosIQR(table$INT_MISC)),]
+  #column INT_ANY
+  table <- table[!(table$INT_ANY %in% atipicosIQR(table$INT_ANY)),]
+  #column related
+  table <- subset(table, select = -c(related))
+
+  #Imputación de columnas==================================================================================================================
+
+  media_aux <- mean(table$propvalue, na.rm = TRUE)
+  table$propvalue <- ifelse(is.na(table$propvalue), media_aux, table$propvalue)
+
+  media_aux <- mean(table$nhostkid, na.rm = TRUE)
+  table$nhostkid <- ifelse(is.na(table$nhostkid), media_aux, table$nhostkid)
+  
+  media_aux <- mean(table$nhours, na.rm = TRUE)
+  table$nhours <- ifelse(is.na(table$nhours), media_aux, table$nhours)
+
+  media_aux <- mean(table$ransomamt, na.rm = TRUE)
+  table$ransomamt <- ifelse(is.na(table$ransomamt), media_aux, table$ransomamt)
+
+  media_aux <- mean(table$ransompaid, na.rm = TRUE)
+  table$ransompaid <- ifelse(is.na(table$ransompaid), media_aux, table$ransompaid)
+
+  media_aux <- mean(table$nreleased, na.rm = TRUE)
+  table$nreleased <- ifelse(is.na(table$nreleased), media_aux, table$nreleased)
+  
+  media_aux <- mean(table$INT_LOG, na.rm = TRUE)
+  table$INT_LOG <- ifelse(is.na(table$INT_LOG), media_aux, table$INT_LOG)
+
+  media_aux <- mean(table$INT_IDEO, na.rm = TRUE)
+  table$INT_IDEO <- ifelse(is.na(table$INT_IDEO), media_aux, table$INT_IDEO)
+  
+  media_aux <- mean(table$INT_MISC, na.rm = TRUE)
+  table$INT_MISC <- ifelse(is.na(table$INT_MISC), media_aux, table$INT_MISC)
+
+  media_aux <- mean(table$INT_ANY, na.rm = TRUE)
+  table$INT_ANY <- ifelse(is.na(table$INT_ANY), media_aux, table$INT_ANY)
+  #Discretización de columnas
+
+  #Normalización de columnas
+  table$ransomamt <- scale(table$ransomamt)
+
   return (table)
 }
 
-data <- manejo3(data)
+  
+  
+data <- manejo4(data)
 
+summary(data)
+write.csv(data, "E:/Descargas/Repos/AMD-2024-1/datosPrepTerrorismo.csv", row.names=TRUE)
