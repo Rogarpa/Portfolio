@@ -2,4 +2,4 @@ FROM python:3.7-alpine AS python-app
 WORKDIR /code
 COPY . /code
 RUN pip install mysql-connector-python
-ENTRYPOINT python3 main.py
+CMD python3 main.py
