@@ -3,6 +3,8 @@ services:
   python-app:
     build:
       dockerfile: ./Dockerfile.python
+    stdin_open: true 
+    tty: true 
     depends_on:
       db:
         condition: service_started
@@ -19,6 +21,3 @@ services:
       MYSQL_USER: 'my_user'
       # Password for connection from python to mysql
       MYSQL_PASSWORD: 'my_password'
-    ports:
-      # <Port exposed> : <MySQL Port running inside container>
-      - '3306:3306'
