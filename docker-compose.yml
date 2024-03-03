@@ -10,7 +10,7 @@ services:
       - "db:database"
   db:
     build:
-      dockerfile: ./Dockerfile.python
+      dockerfile: ./Dockerfile.db
     restart: always
     environment:
       MYSQL_DATABASE: 'test'

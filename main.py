@@ -164,7 +164,8 @@ class interfaz():
 	def ejecutarConsulta(self, consulta):
 		try:
 			connection = mysql.connector.connect(
-							host='database',
+							host='db',
+							port = "3306",
 							database='test',
 							user='my_user',
 							password='my_password',
