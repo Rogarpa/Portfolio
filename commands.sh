@@ -21,3 +21,8 @@ sudo docker exec -it proyectofinal-db-1 /bin/sh
 sudo docker exec -it proyectofinal-python-app-1 /bin/sh
 
 sudo service mysql stop
+
+
+
+docker compose -f ./docker-compose.yml  up --force-recreate --build db
+docker compose -f ./docker-compose.yml  run
