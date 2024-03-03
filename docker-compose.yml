@@ -1,0 +1,21 @@
+version: '3.3'
+services:
+  db:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'test'
+      MYSQL_ROOT_PASSWORD: 'my_root_passowrd'
+      # User for connection from python to mysql
+      MYSQL_USER: 'my_user'
+      # Password for connection from python to mysql
+      MYSQL_PASSWORD: 'my_password'
+    ports:
+      # <Port exposed> : <MySQL Port running inside container>
+      - '3306:3306'
+    expose:
+      # Opens port 3306 on the container
+      - '3306'
+      # Where our data will be persisted
+
+
