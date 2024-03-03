@@ -1,16 +1,7 @@
 version: '3.3'
 services:
-  python-app:
-    build:
-      dockerfile: ./Dockerfile.python
-    depends_on:
-      db:
-        condition: service_started
-    links:
-      - "db:database"
   db:
-    build:
-      dockerfile: ./Dockerfile.python
+    image: mysql:latest
     restart: always
     environment:
       MYSQL_DATABASE: 'test'
