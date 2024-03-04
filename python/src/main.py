@@ -52,7 +52,7 @@ class interfaz():
 		return self.inputLine
 	def capturarTelefono(self):
 		self.next()
-		foundedMatch = None
+		foundedMatch = re.search("^\\+?[1-9][0-9]{7,14}$", self.inputLine)
 		while(not(self.inputLine.isdigit()) or (foundedMatch == None) or (not(foundedMatch.group(0) == self.inputLine))):
 			print("Telefono inválido")
 			self.next()
