@@ -1,5 +1,6 @@
 FROM python:3.7-alpine AS python-app
 RUN pip install mysql-connector-python
-WORKDIR /app
-COPY ./src /app
-ENTRYPOINT python3 ./app/src/main.py
+
+WORKDIR ./app
+COPY ./python/src ./python/src
+ENTRYPOINT python3 ./python/src/main.py
