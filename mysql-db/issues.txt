@@ -1,0 +1,2 @@
+link no need 
+tty and stdin no need

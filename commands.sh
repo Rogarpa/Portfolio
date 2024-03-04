@@ -11,10 +11,10 @@ docker run --name python python
 docker compose up --force-recreate --build -f ./docker-compose-db.yml
 docker compose up --force-recreate --build -f ./docker-compose-python.yml
 # ?
-docker compose -f ./docker-compose.yml  up --force-recreate --build 
-docker compose -f ./docker-compose.yml  down
-docker compose -f ./docker-compose-db.yml  up --force-recreate --build 
-docker compose -f ./docker-compose-db.yml  down
+sudo docker compose -f ./docker-compose.yml  up --force-recreate --build 
+sudo docker compose -f ./docker-compose.yml  down
+sudo docker compose -f ./docker-compose-db.yml  up --force-recreate --build 
+sudo docker compose -f ./docker-compose-db.yml  down
 
 sudo docker start -i proyectofinal-python-app-1
 sudo docker exec -it proyectofinal-db-1 /bin/sh
@@ -24,5 +24,5 @@ sudo service mysql stop
 
 
 
-docker compose -f ./docker-compose.yml  up --force-recreate --build db
-docker compose -f ./docker-compose.yml  run
+sudo docker compose -f ./docker-compose.yml  up --force-recreate --build db
+sudo docker compose -f ./docker-compose.yml run --build --rm python-app
