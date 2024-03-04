@@ -1,4 +1,6 @@
-CREATE TABLE persona(
+USE test;
+DROP TABLE IF EXISTS persona;
+CREATE TABLE IF NOT EXISTS persona(
 id_persona serial PRIMARY KEY,
 nombre VARCHAR ( 50 ),
 apellidoPaterno VARCHAR ( 50 ),
