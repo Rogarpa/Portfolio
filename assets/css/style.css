@@ -11,7 +11,9 @@
 --------------------------------------------------------------*/
 body {
   font-family: "Open Sans", sans-serif;
-  color: #272829;
+  /* color: #272829; */
+  color: #fff;
+  background: #000000;
 }
 
 a {
@@ -77,7 +79,7 @@ h6 {
   bottom: 0;
   z-index: 9999;
   overflow: hidden;
-  background: #fff;
+  background: #000000;
 }
 
 #preloader:before {
@@ -86,7 +88,7 @@ h6 {
   top: calc(50% - 30px);
   left: calc(50% - 30px);
   border: 6px solid #3483eb;
-  border-top-color: #fff;
+  border-top-color: #000000;
   border-bottom-color: #fff;
   border-radius: 50%;
   width: 60px;
@@ -375,7 +377,7 @@ section {
   margin-bottom: 20px;
   padding-bottom: 20px;
   position: relative;
-  color: #45505b;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .section-title h2::before {
@@ -547,7 +549,7 @@ section {
 
 .resume .resume-item h5 {
   font-size: 16px;
-  background: #f7f8f9;
+  background: gray;
   padding: 5px 15px;
   display: inline-block;
   font-weight: 600;
@@ -807,7 +809,7 @@ section {
   text-align: center;
   padding: 70px 20px 80px 20px;
   transition: all ease-in-out 0.3s;
-  background: #fff;
+  background: #000000;
   box-shadow: 0px 5px 90px 0px rgba(110, 123, 131, 0.05);
 }
 
@@ -1021,7 +1023,8 @@ section {
 --------------------------------------------------------------*/
 .contact .info {
   width: 100%;
-  background: #fff;
+  background: #000000;
+  border-radius: 2%;
 }
 
 .contact .info i {
@@ -1043,7 +1046,7 @@ section {
   font-size: 22px;
   font-weight: 600;
   margin-bottom: 5px;
-  color: #45505b;
+  color: #fff;
 }
 
 .contact .info p {
@@ -1067,7 +1070,7 @@ section {
 
 .contact .php-email-form {
   width: 100%;
-  background: #fff;
+  background: #000000;
 }
 
 .contact .php-email-form .form-group {
