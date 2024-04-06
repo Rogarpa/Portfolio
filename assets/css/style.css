@@ -737,6 +737,24 @@ section {
   right: 15px;
 }
 
+.portfolio .portfolio-wrap .technologies{
+  background: #000;
+}
+.portfolio .portfolio-wrap .technologies img{
+  width: 10%;
+
+}
+.portfolio .portfolio-item .technologies img{
+  width: 10%;
+
+}
+.portfolio .portfolio-item .technologies img:hover{
+  transform: rotate(30deg);
+
+}
+@keyframes bounce {
+  to { transform: scale(1.2); }
+}
 /*--------------------------------------------------------------
 # Portfolio Details
 --------------------------------------------------------------*/
