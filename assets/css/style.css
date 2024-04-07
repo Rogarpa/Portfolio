@@ -518,7 +518,9 @@ section {
   transition: 0.9s;
   background-color: #3483eb;
 }
-
+.skills .technologies img{
+  width: 50pt;
+}
 /*--------------------------------------------------------------
 # Resume
 --------------------------------------------------------------*/
@@ -740,10 +742,7 @@ section {
 .portfolio .portfolio-wrap .technologies{
   background: #000;
 }
-.portfolio .portfolio-wrap .technologies img{
-  width: 10%;
 
-}
 .portfolio .portfolio-item .technologies img{
   width: 10%;
 
@@ -751,9 +750,6 @@ section {
 .portfolio .portfolio-item .technologies img:hover{
   transform: rotate(30deg);
 
-}
-@keyframes bounce {
-  to { transform: scale(1.2); }
 }
 /*--------------------------------------------------------------
 # Portfolio Details
