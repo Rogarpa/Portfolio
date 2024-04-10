@@ -75,13 +75,4 @@
 }
 .tech_box:hover{
     --tw-shadow-color: rgb(136 247 207 / .9);
-    /* --tw-shadow-color: rgb(37 99 235 / .9); */
 }
-/* .skills-table{
-    position: relative;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    margin: auto;
-} */

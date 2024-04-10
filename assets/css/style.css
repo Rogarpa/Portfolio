@@ -340,6 +340,22 @@ h6 {
   color: #3483eb;
 }
 
+#hero .cv-button{
+  align-items: center!important;
+  position: fixed;
+  background: #3483eb;
+  border-radius: 50px;
+}
+
+#hero .cv-button:hover{
+  background: rgba(52, 131, 235, 0.5);
+}
+
+#hero .cv-button-body{
+  padding: 20px;
+  color: #fff;
+}
+
 @media (max-width: 992px) {
   #hero {
     text-align: center;
