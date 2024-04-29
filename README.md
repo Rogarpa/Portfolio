@@ -37,6 +37,10 @@ __Python__ techs as:
 - **[Pillow]** for images manipulation
 - **OOP**
 
+## Universal Skills Involved
+- **Callback oriented menus**
+- **Complex convolutional algorithms**
+- **Batch File treatment**
 
 ## Features
 
