@@ -36,6 +36,13 @@
 
 The Salads Menu Project is a web application designed to showcase a variety of delicious salad options. This project aims to provide users with an easy-to-use interface to explore different salad recipes, ingredients, and nutritional information.
 
+## Universal Skills Involved
+ - **OOP**
+ - **Dependencies Management**
+ - **Framework Documentation**
+ - **Object Realational Mepper**
+ - **Project Building Tools**
+
 ## Features
 
 1. **Browse Salad Options**: Users can browse through a selection of diverse salad options.
