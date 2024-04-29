@@ -8,11 +8,13 @@ The database is a Kaggle data training dataset and is developed in **R** languag
 https://www.kaggle.com/datasets/START-UMD/gtd?select=globalterrorismdb_0718dist.csv
 
 Data minnning phases of the project:
-
+## Universal skills involved
 - **Data analysis**
 - **Data preprocessing**
-- **Machine Learning Models**
+- **Machine Learning Models trainning and evaluation**
+
 ---
+
 <p align="center">
   <img src="./README_utilites/gtd_logo.png" alt="gtd logo" width="450"/>
 </p>
