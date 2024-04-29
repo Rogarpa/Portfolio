@@ -26,6 +26,17 @@ This project aims to fine-tune the ResNet-50 convolutional neural network for ob
 
 Object detection is a computer vision task that involves identifying and locating objects within an image. The COCO dataset is a widely used benchmark for object detection, containing a large collection of images labeled with bounding boxes and class labels for various objects.
 
+## Universal Skills Involved
+  - Machine Learning workflows
+    - Data preprocessing
+    - Model training
+    - Model evaluation
+    - Model deployment
+  - Convolutional Nets
+  - Object detection
+  - Datasets
+  - Metrics
+
 ## Requirements
 
 - Python 3.x
@@ -80,4 +91,4 @@ The results are alike this one, for a more specific report you can run the [note
   <img src="./README_utilities/bounded_result2.png" alt="bounded predicted result" width="200"/>
 </p>
 
-[notebook]: proyectofinal-ml/object_detection.ipynb
+[notebook]: /object_detection.ipynb
