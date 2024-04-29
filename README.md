@@ -92,9 +92,9 @@ If you are using a Linux system
 4. Preview the filtered image in real-time.
 5. Save the filtered image to your preferred location.
 
-[Pillow]: <https://pillow.readthedocs.io/en/stable/>.
+[Pillow]: https://pillow.readthedocs.io/en/stable/
 
-[Tkinter]: <https://docs.python.org/3/library/tk.html>.
+[Tkinter]: https://docs.python.org/3/library/tk.html
 
 ## Filters
 
