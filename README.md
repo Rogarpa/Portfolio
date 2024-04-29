@@ -11,6 +11,11 @@
 ---
 These are projects  that uses the ESP32 module involving its IoT  capabilities.
 
+## Universal Skills Involved
+  - Microcontroller documentation reading
+  - Microcode of firmware library managing
+  - Protocols understanding
+  - Electronic knowledge
 
 ## Techs and ESP32 features used
   - Wi-Fi connectivity
